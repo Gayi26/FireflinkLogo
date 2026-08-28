@@ -1,3 +1,8 @@
+release/onprem_v3.2.35 
+
+
+_____________________________________________________________________________________________________________________________________________________________________________________________________
+
 /etc/docker/daemon.json
 
 {
@@ -298,3 +303,62 @@ Mongodb ---> plugins (new collection) -->
     }
   ]
 }
+
+
+_____________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+CLIENT - (elctronUpdateConfig)
+
+wget \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/FireFlinkClient-3.1.7-arm64.dmg \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/FireFlinkClient-3.1.7-arm64.dmg.blockmap \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/FireFlinkClient-3.1.7-arm64.zip \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/FireFlinkClient-3.1.7-arm64.zip.blockmap \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/FireFlinkClient-3.1.7-setup.exe \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/FireFlinkClient-3.1.7-setup.exe.blockmap \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/FireFlinkClient-3.1.7-x64.dmg \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/FireFlinkClient-3.1.7-x64.dmg.blockmap \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/FireFlinkClient-3.1.7-x64.zip \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/FireFlinkClient-3.1.7-x64.zip.blockmap \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/FireFlinkClient-3.1.7.AppImage \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/latest-linux.yml \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/latest-mac.yml \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/v3-Onprem/latest.yml
+
+
+	
+PLUGINS - (locator-finder)
+
+Plugins
+-------------------------------------------
+wget \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/V3-Onprem_Customer/Plugins/web.zip \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/V3-Onprem_Customer/Plugins/mobile.zip \
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/V3-Onprem_Customer/Plugins/record.zip
+
+OPTIONAL :: FFMPEG
+
+https://product-utility-sg.s3.ap-southeast-1.amazonaws.com/ffmpeg/linux/ffmpeg.zip 
+https://product-utility-sg.s3.ap-southeast-1.amazonaws.com/ffmpeg/win/ffmpeg.zip 
+https://product-utility-sg.s3.ap-southeast-1.amazonaws.com/ffmpeg/mac/ffmpeg.zip
+
+
+AppiumV3 - (Appium)
+
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/lava/Common/Win/appiumV3.zip
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/lava/Common/Mac/appiumV3.zip
+https://product-utility-nonprod.s3.ap-south-1.amazonaws.com/NodProd/lava/Common/Linux/appiumV3.zip
+
+
+
+
+
+
+OPTIONAL : 
+
+Eclipse : https://fireflink-secure-fs.s3.ap-south-1.amazonaws.com/ea-phase2/EclipsePlugin.zip
+Jenkins : https://fireflink-secure-fs.s3.ap-south-1.amazonaws.com/ncdex_eaPhase2/15_07_2026/FireFlink.hpi
+AZURE:
+https://fireflink-secure-fs.s3.ap-south-1.amazonaws.com/ea-phase2/maven.yml
+https://fireflink-secure-fs.s3.ap-south-1.amazonaws.com/ea-phase2/fireflink-action-1.0.0.jar	
