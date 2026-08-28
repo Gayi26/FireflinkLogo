@@ -1,0 +1,170 @@
+{
+  "info": {
+    "_postman_id": "bbc3eb91-c79b-4636-a6d1-ed9a41d96e46",
+    "name": "Sridhar - Project creation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "26550200"
+  },
+  "item": [
+    {
+      "name": "Docs to save in Auth DB",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJvVVg3eXJjUUh0Q0liaDAzdTZwNEd2VjBLWXNhUU12YW1ETElVcjZhOFZVIn0.eyJleHAiOjE3NzU4ODQzNDksImlhdCI6MTc3NTgxMjM0OSwianRpIjoib25ydHJvOjUyYTQzYjQwLTYwNTgtNDExMi04M2ZhLTVlMTllNDRjZWE2ZiIsImlzcyI6Imh0dHA6Ly8xMTUuODQuMTcwLjgyOjgwODAvcmVhbG1zL0ZpcmVGbGluayIsImF1ZCI6InRhcmdldC1jbGllbnQiLCJzdWIiOiJmOjc3MGMxZDQxLTJlMmQtNDUwMy1hZjliLWM3ZWIxMjRhMmE0ZTpzaGlyaW5lbnZpMTIzQGdtYWlsLmNvbSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImZsaW5rLXNlcnZpY2UiLCJzaWQiOiJiNDQyMDNmOS0wZDg4LTQwMTItYWUzYS0zNDNhOWI3Nzg3YzAiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImN1cnJlbnRMaWNlbnNlSWQiOiJMSUMxMDI3IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjdXJyZW50UHJpdmlsZWdlIjoiU3VwZXIgQWRtaW4iLCJmdWxsTmFtZSI6IlNoaXJpbiIsImFjdGl2YXRpb25TdGF0dXMiOiJBQ1RJVkUiLCJwcml2aWxlZ2UiOiJTdXBlciBBZG1pbiIsImxpY2Vuc2VOYW1lIjoiRmlyZUZsaW5rIC0gTElDMTAyNyIsInByZWZlcnJlZF91c2VybmFtZSI6IlNoaXJpbiIsInVzZXJOYW1lIjoic2hpcmluZW52aTEyM0BnbWFpbC5jb20iLCJiaWxsaW5nQ3ljbGUiOiJOL0EiLCJpZCI6IlVTUjEyNDEiLCJsaWNlbnNlSWQiOiJMSUMxMDI3IiwiZW1haWwiOiJzaGlyaW5lbnZpMTIzQGdtYWlsLmNvbSJ9.KY4HaNiV6i7TfrOQ6RUHpgj-UwF1yKnayPVwSz2d8lPLTrA36uV7J5JSo0VasLe69Kv373OJzwWoYodHEsqRqncAVi7ipOJS236SfWdYzkV_VoTQLV2L9Pb-4KS_KbOmm8Hfpw7jF57Z0doG12sVKQBE2vo1F4dqEpgMn6hBguaoMjo8rFS3Nv-XlrYTswHG-utE5DOw7McphS8oJjHL84P47EVjyIbYWc0407kqqKo8jeiSoscXCT_LYgA5QZGjkBAApXAIhuAb1rq_gXXOx7C5XhG0-vvlMj-v6mS8z9lQIjrqC6fOSXKigdneVVFyB_kkb95GsetaQgFFW__PJQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJTV0xvN3BKaFpBbllvb2VmR1luZTlrckpfc2puNkFhRFZXYTlWQTRsQkFzIn0.eyJleHAiOjE3NTQ1NTg5OTUsImlhdCI6MTc1NDQ3MjY3MSwianRpIjoib25ydHJ0OjNhZjRjNzZhLTlhNWItNDM1YS05NjdjLTNkNDM5MzE5YzZmNCIsImlzcyI6Imh0dHBzOi8vYXBwLnYzLmZpcmVmbGluay5jb206MzAxMDEvcmVhbG1zL0ZpcmVGbGluayIsInN1YiI6ImY6ODg5MjliMDAtNzNiOC00NzRmLWJiYmMtZGIyZTFhM2UwNzk4OmhvbGlzb2xsb2dpc3RpY3NmaXJlZmxpbmtAZ21haWwuY29tIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZmxpbmstc2VydmljZSIsInNpZCI6ImJjNTFjNGU4LTZmZGMtNDU5Yy04MzE2LTE0OWNjNDNjMmViZSIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiIl0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImN1cnJlbnRMaWNlbnNlSWQiOiJMSUMyMTA1NCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY3VycmVudFByaXZpbGVnZSI6IlN1cGVyIEFkbWluIiwiZnVsbE5hbWUiOiJIb2xpc29sIiwiYWN0aXZhdGlvblN0YXR1cyI6IkFDVElWRSIsInByaXZpbGVnZSI6IlN1cGVyIEFkbWluIiwibGljZW5zZU5hbWUiOiJXTVMtTElDMjEwNTQiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJIb2xpc29sIiwidXNlck5hbWUiOiJob2xpc29sbG9naXN0aWNzZmlyZWZsaW5rQGdtYWlsLmNvbSIsImJpbGxpbmdDeWNsZSI6Ik1vbnRobHkiLCJpZCI6IlVTUjEyNjE2MiIsImxpY2Vuc2VJZCI6IkxJQzIxMDU0IiwiZW1haWwiOiJob2xpc29sbG9naXN0aWNzZmlyZWZsaW5rQGdtYWlsLmNvbSJ9.Y6BQrD6WVNKWfSf1Jhwq3n1LZD9h6MFAELG7QuhmqsAERBtQUPOxgYsKTLBBx990cOkFZZnqnDAbftoKjQekpmZBpiAL0lxpYzivPUluKOTZpycuVxA2Fp3-NnsHoN4VRmEfkRJx5AHKqtDWJFostEMQZkE9UkI3fknGaDsRKyHwltY5oGru5W5eCDx-morXbxsgsMBzD05fF0iHp9L1HR_vZOML7f1-TVOYu7CGLUBRh3Zu5vUsDbEf_Xlpj5GfQFF15tJy2x30wv_AB9rXPA1GHzKWOfdvIOmgox_XBu9slFvGDWC8CV4JzPNUDvVAEKA5PIvfS9yoYGG1VdgCQA"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    // do not change payload\n    \"selectionType\": \"LIST\",\n    \"licenseIds\": [\n        \"auth\"\n    ],\n    \"collectionName\": \"default_mtc_lifecycle_template\",\n    \"rollback\": false,\n    \"optionalData\": [\n        {\n            \"_id\": \"MTCLIFTEMP1001\",\n            \"name\": \"Standard Template\",\n            \"templateType\": \"Predefined\",\n            \"executionStatus\": [\n                \"Passed\",\n                \"Failed\",\n                \"Warning\",\n                \"Skipped\"\n            ],\n            \"from\": \"License\"\n        },\n        {\n            \"_id\": \"MTCLIFTEMP1002\",\n            \"name\": \"Sample Template\",\n            \"templateType\": \"Predefined\",\n            \"executionStatus\": [\n                \"Passed\",\n                \"Failed\",\n                \"Warning\",\n                \"Skipped\",\n                \"On Hold\",\n                \"Descoped\",\n                \"To be Validated\",\n                \"To be Tested\"\n            ],\n            \"from\": \"License\"\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://v3migration.fireflink.com/refactoring/optimize/v3/refactoring/default/documents",
+          "protocol": "https",
+          "host": [
+            "v3migration",
+            "fireflink",
+            "com"
+          ],
+          "path": [
+            "refactoring",
+            "optimize",
+            "v3",
+            "refactoring",
+            "default",
+            "documents"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "License level templates and Project set default",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ3NUJiUmYycDBranJqYVdiM3JsZVQyQzRma1RSNmJscWNhTVEzbFFocHlNIn0.eyJleHAiOjE3NzU2Mjc2MTgsImlhdCI6MTc3NTU1NTYxOCwianRpIjoib25ydHJvOjc0YWI0NDEzLTZjYzMtNGU2Yy05M2Q0LWY2Nzk1MDFkOWZjNCIsImlzcyI6Imh0dHA6Ly8xMTUuODQuMTcwLjI0ODo4MDgwL3JlYWxtcy9GaXJlRmxpbmsiLCJzdWIiOiJmOjc3MGMxZDQxLTJlMmQtNDUwMy1hZjliLWM3ZWIxMjRhMmE0ZTpzdXBwb3J0QGZpcmVmbGluay5jb20iLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJmbGluay1zZXJ2aWNlIiwic2lkIjoiZGYzNDJlN2EtMzBjMy00OTVhLTg2NWUtNzI4NzllMGZhMTYwIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJjdXJyZW50TGljZW5zZUlkIjoiTElDMTAzMiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY3VycmVudFByaXZpbGVnZSI6IlN1cGVyIEFkbWluIiwiZnVsbE5hbWUiOiJzdXBwb3J0IiwiYWN0aXZhdGlvblN0YXR1cyI6IkFDVElWRSIsInByaXZpbGVnZSI6IlN1cGVyIEFkbWluIiwibGljZW5zZU5hbWUiOiJGaXJlRmxpbmsgLSBMSUMxMDMyIiwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VwcG9ydCIsInVzZXJOYW1lIjoic3VwcG9ydEBmaXJlZmxpbmsuY29tIiwiYmlsbGluZ0N5Y2xlIjoiTi9BIiwiaWQiOiJVU1IxMzA0IiwibGljZW5zZUlkIjoiTElDMTAzMiIsImVtYWlsIjoic3VwcG9ydEBmaXJlZmxpbmsuY29tIn0.EU_r-MaQytanWzmMYwDpcbQevsj8zIbmXIecwb2R6szprZodk2Jma5yHpUzp-0NtMBZQuVQzugypeLIH-ZYb780pSrSwKSxrKRUnFT-shtmtKyd_AwVOJjDdDRyMq6SdW5zat5adK_KUTNdMObvZT7Wub71HGk7ITgrAVzZZkXqN7WsD3bFL45K7JKIAeODGjCXBnoYEEl1mrjZFzrRgD9pkJETR7sSW3JHd---o0kmx2quUWstEK2Q-B21cFUShGpE6gnQ4FI02jh_eephksucxVag9V-8AxFvlBR3f9Im0Hp-ivZwbgB3t-JmlJm1E5JJjhjzakBTgPIRDEVG17w",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJEeE5VelJXSGhLTUVkSTVKQnV6eERFM3NsczVHRkV5cmJNeHVHNWtmNnRZIn0.eyJleHAiOjE3Njk2OTI1MDIsImlhdCI6MTc2OTY5MDcwMiwianRpIjoib25ydHJ0OjQyZGE1NWM1LWI4OTctNGQwMC1hN2QzLTRkN2NlYjJjZGRlZSIsImlzcyI6Imh0dHA6Ly8xMDMuMTgyLjIxMC4yMjY6MzAxMDcvcmVhbG1zL0ZpcmVGbGluay10ZXN0MyIsImF1ZCI6InRhcmdldC1jbGllbnQiLCJzdWIiOiJmOmNhMzBmNDk3LTY1Y2YtNGU4Zi1iZGE3LTE0ZjM1NTNiYzZmNTpzYWRoYW5hLmdAZmlyZWZsaW5rLmNvbSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImZsaW5rLXNlcnZpY2UiLCJzaWQiOiI2Y2E3MDFlZS00M2Q1LTQzZGYtYmE3NC1lZjhhOWYzY2I4ZmEiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbIioiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsImN1cnJlbnRMaWNlbnNlSWQiOiJMSUMzOTcyIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjdXJyZW50UHJpdmlsZWdlIjoiQWRtaW4iLCJmdWxsTmFtZSI6IlNhZGhhbmEiLCJhY3RpdmF0aW9uU3RhdHVzIjoiQUNUSVZFIiwicHJpdmlsZWdlIjoiQWRtaW4iLCJsaWNlbnNlTmFtZSI6IkZpcmVGbGluayAtIExJQzM5NzIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJTYWRoYW5hIiwidXNlck5hbWUiOiJzYWRoYW5hLmdAZmlyZWZsaW5rLmNvbSIsImJpbGxpbmdDeWNsZSI6IlllYXJseSIsImlkIjoiVVNSMjU2MzgiLCJsaWNlbnNlSWQiOiJMSUMzOTcyIiwiZW1haWwiOiJzYWRoYW5hLmdAZmlyZWZsaW5rLmNvbSJ9.JLosR1TAx8R4WoukFWm47agHa4wrxU-hU3ZgeVTqpgzm-soybGDTku1Sz26Pfo-tHMpaOXGrbF42tLkUMWz7VEyft-hwriN8_BFOhAwTgjp_ZZCX--kSC5rt-4hgBQdV14cnN6vO8jl5OVTt28RVYMUVQ7KKYFG-T43A8UPCTZPg-2S496Mm-sGYNCfYkNbcGfJ8Hw4OiD-wsC0UvEoefHdtc1kwOr-la077nAKLhPAqx4RQzWSFgWEo5OejBxtwj9nPiaV9g6CZXksnE5OiiQEg7NNgzgsIl9-UovA9KRIvBB3AJiEOvDrr56BjH0vgCyllV01HLb0Mg8aI_5CXWQ"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"selectionType\": \"ALL\",\n    \"licenseIds\": [],\n    \"rollback\": false\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://fireflink.cibc.com/refactoring/optimize/v3/refactoring/manual/lifecycle/template",
+          "protocol": "https",
+          "host": [
+            "fireflink",
+            "cibc",
+            "com"
+          ],
+          "path": [
+            "refactoring",
+            "optimize",
+            "v3",
+            "refactoring",
+            "manual",
+            "lifecycle",
+            "template"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Project status",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ3NUJiUmYycDBranJqYVdiM3JsZVQyQzRma1RSNmJscWNhTVEzbFFocHlNIn0.eyJleHAiOjE3NzU2Mjc2MTgsImlhdCI6MTc3NTU1NTYxOCwianRpIjoib25ydHJvOjc0YWI0NDEzLTZjYzMtNGU2Yy05M2Q0LWY2Nzk1MDFkOWZjNCIsImlzcyI6Imh0dHA6Ly8xMTUuODQuMTcwLjI0ODo4MDgwL3JlYWxtcy9GaXJlRmxpbmsiLCJzdWIiOiJmOjc3MGMxZDQxLTJlMmQtNDUwMy1hZjliLWM3ZWIxMjRhMmE0ZTpzdXBwb3J0QGZpcmVmbGluay5jb20iLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJmbGluay1zZXJ2aWNlIiwic2lkIjoiZGYzNDJlN2EtMzBjMy00OTVhLTg2NWUtNzI4NzllMGZhMTYwIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJjdXJyZW50TGljZW5zZUlkIjoiTElDMTAzMiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY3VycmVudFByaXZpbGVnZSI6IlN1cGVyIEFkbWluIiwiZnVsbE5hbWUiOiJzdXBwb3J0IiwiYWN0aXZhdGlvblN0YXR1cyI6IkFDVElWRSIsInByaXZpbGVnZSI6IlN1cGVyIEFkbWluIiwibGljZW5zZU5hbWUiOiJGaXJlRmxpbmsgLSBMSUMxMDMyIiwicHJlZmVycmVkX3VzZXJuYW1lIjoic3VwcG9ydCIsInVzZXJOYW1lIjoic3VwcG9ydEBmaXJlZmxpbmsuY29tIiwiYmlsbGluZ0N5Y2xlIjoiTi9BIiwiaWQiOiJVU1IxMzA0IiwibGljZW5zZUlkIjoiTElDMTAzMiIsImVtYWlsIjoic3VwcG9ydEBmaXJlZmxpbmsuY29tIn0.EU_r-MaQytanWzmMYwDpcbQevsj8zIbmXIecwb2R6szprZodk2Jma5yHpUzp-0NtMBZQuVQzugypeLIH-ZYb780pSrSwKSxrKRUnFT-shtmtKyd_AwVOJjDdDRyMq6SdW5zat5adK_KUTNdMObvZT7Wub71HGk7ITgrAVzZZkXqN7WsD3bFL45K7JKIAeODGjCXBnoYEEl1mrjZFzrRgD9pkJETR7sSW3JHd---o0kmx2quUWstEK2Q-B21cFUShGpE6gnQ4FI02jh_eephksucxVag9V-8AxFvlBR3f9Im0Hp-ivZwbgB3t-JmlJm1E5JJjhjzakBTgPIRDEVG17w",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJEeE5VelJXSGhLTUVkSTVKQnV6eERFM3NsczVHRkV5cmJNeHVHNWtmNnRZIn0.eyJleHAiOjE3NzAwMTIwMzgsImlhdCI6MTc3MDAxMDIzOCwianRpIjoib25ydHJvOjA5Njc1MTczLTQwNGUtNDQxNi1hZGY3LWUyZTE3OGFlYTM5MCIsImlzcyI6Imh0dHA6Ly8xMDMuMTgyLjIxMC4yMjY6MzAxMDcvcmVhbG1zL0ZpcmVGbGluay10ZXN0MyIsImF1ZCI6InRhcmdldC1jbGllbnQiLCJzdWIiOiJmOmNhMzBmNDk3LTY1Y2YtNGU4Zi1iZGE3LTE0ZjM1NTNiYzZmNTpzcmlkaGFyLmJ2QGZpcmVmbGluay5jb20iLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJmbGluay1zZXJ2aWNlIiwic2lkIjoiYTJjY2EzNzQtYTc3MC00MWQyLTkwY2EtNzg2ZTRkZGI4ODc2IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJjdXJyZW50TGljZW5zZUlkIjoiTElDMzkzNiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY3VycmVudFByaXZpbGVnZSI6IlN1cGVyIEFkbWluIiwiZnVsbE5hbWUiOiJzcmlkaGFyIGJ2IiwiYWN0aXZhdGlvblN0YXR1cyI6IkFDVElWRSIsInByaXZpbGVnZSI6IlN1cGVyIEFkbWluIiwibGljZW5zZU5hbWUiOiJGaXJlRmxpbmsgLSBMSUMzOTM2IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic3JpZGhhciBidiIsInVzZXJOYW1lIjoic3JpZGhhci5idkBmaXJlZmxpbmsuY29tIiwiYmlsbGluZ0N5Y2xlIjoiWWVhcmx5IiwiaWQiOiJVU1IyNjQxNSIsImxpY2Vuc2VJZCI6IkxJQzM5MzYiLCJlbWFpbCI6InNyaWRoYXIuYnZAZmlyZWZsaW5rLmNvbSJ9.O1JPylIg6xcL7lfogJYFJbeku7RS-NPpyXh5l8BZbZDt9Hdu13i2fE3jKdyMQGt9mVvOAIpq__DvmZCJXB6vst2_yU_FuH6gcuY1upnvFk5ogF8Yq4IkUvsD9lr_wVvxu6x2cgKUsnaJTpSmNOZRFc7HfIqI8VO17rfJ3z7xOhDBbjSpZKHjTvh8AXTexXFSfZ4WoVAkASRdZlm4UW69TJFKMg1PXz95yC4tqHLpjAUmDBtxCFDE3SYTNmlBPKJFxzc8GomqgYukmxv7q3RcVJWiXLuElNbrWyfDjVG3BDoX0yWeuAS0fZ0pNRw2SmBVtN3yhln1wfMKSqL-W6g-Bw"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n     // do not change payload\n    \"selectionType\": \"LIST\",\n    \"licenseIds\": [\n        \"auth\"\n    ],\n    \"collectionName\": \"project_status\",\n    \"rollback\": false,\n    \"optionalData\": [\n        {\n            \"_id\": \"PS1001\",\n            \"name\": \"Open\",\n            \"dashboardVisible\": true,\n            \"order\": 1\n        },\n        {\n            \"_id\": \"PS1002\",\n            \"name\": \"Closed\",\n            \"dashboardVisible\": true,\n            \"order\": 2\n        },\n        {\n            \"_id\": \"PS1003\",\n            \"name\": \"Archive\",\n            \"dashboardVisible\": true,\n            \"order\": 3\n        },\n        {\n            \"_id\": \"PS1004\",\n            \"name\": \"Descoped\",\n            \"dashboardVisible\": true,\n            \"order\": 4\n        },\n        {\n            \"_id\": \"PS1005\",\n            \"name\": \"On-Hold\",\n            \"dashboardVisible\": true,\n            \"order\": 5\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://fireflink.cibc.com/refactoring/optimize/v3/refactoring/default/documents",
+          "protocol": "https",
+          "host": [
+            "fireflink",
+            "cibc",
+            "com"
+          ],
+          "path": [
+            "refactoring",
+            "optimize",
+            "v3",
+            "refactoring",
+            "default",
+            "documents"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
