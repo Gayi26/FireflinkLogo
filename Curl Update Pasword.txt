@@ -1,0 +1,1 @@
+curl --location 'http://IP:9091/optimize/v1/public/user/change-password' --header 'Content-Type: application/json' --header 'Authorization: Bearer <YOUR_BEARER_TOKEN>' --data-raw '{"emailId":"sammed.patil@icraanalytics.com","password":"<PASSWORD>","id":"USR1311","passwordToken":"878eec3f-98d4-4f5a-9569-7b29d1c0d23e"}'
