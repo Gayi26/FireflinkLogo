@@ -1,0 +1,24 @@
+curl --location 'http://172.16.0.4:9091/optimize/v1/public/user/change-password' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_BEARER_TOKEN' \
+--data-raw '{
+  "emailId": "your-email@example.com",
+  "password": "YOUR_NEW_PASSWORD",
+  "userId": "USR1075",
+  "passwordToken": "YOUR_PASSWORD_TOKEN"
+}'
+ 
+curl --location 'http://172.16.0.4:9091/optimize/v1/public/user/change-password' --header 'Content-Type: application/json' --header 'Authorization: Bearer YOUR_BEARER_TOKEN' --data-raw '{"emailId":"YOUR_EMAIL","password":"YOUR_NEW_PASSWORD","userId":"USR1075","passwordToken":"YOUR_PASSWORD_TOKEN"}'
+ 
+curl --location 'http://172.16.0.4:9091/optimize/v1/public/user/change-password' --header 'Content-Type: application/json' --header 'Authorization: Bearer <YOUR_BEARER_TOKEN>' --data-raw '{"emailId":"<YOUR_EMAIL>","password":"<NEW_PASSWORD>","userId":"<YOUR_USER_ID>","passwordToken":"<YOUR_PASSWORD_TOKEN>"}'
+ 
+curl --location 'API_URL'
+--header 'Content-Type: application/json'
+--header 'Authorization: Bearer TOKEN'
+--data-raw '{
+  "emailId": "EMAIL",
+  "password": "NEW_PASSWORD",
+  "userId": "USER_ID",
+  "passwordToken": "PASSWORD_TOKEN"
+}'
+ 
