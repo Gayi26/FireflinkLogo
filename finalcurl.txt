@@ -1,0 +1,7 @@
+curl -X POST "http://172.16.0.4:9091/optimize/v1/public/user/change-password" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_LONG_JWT_TOKEN_HERE" \
+  -d '{
+    "email": "gayathri.p@fireflink.com",
+    "passwordToken": "YOUR_PASSWORD_TOKEN_HERE"
+  }'
