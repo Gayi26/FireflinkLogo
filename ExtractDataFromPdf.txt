@@ -1,0 +1,208 @@
+package Bussiness_Logics;
+
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.pdfbox.text.TextPosition;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+public class GenericPdfTableExtractor {
+
+    private static final boolean DEBUG = false; // Set to false to output ONLY the target value
+
+    public static void main(String[] args) {
+        String pdfPath = "C:\\Users\\User\\Downloads\\Generic_PDF_Table_Extraction_Test.pdf";
+        int pageNumber = 2; // 1-based index
+        String searchText = "ACCOUNT MAINTENANCE-COMML";
+        int targetColumn = 4; // 1-based index
+
+        try {
+            String result = extractValue(pdfPath, pageNumber, searchText, targetColumn);
+            System.out.println(result); // Outputs strictly: 50.00
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String extractValue(String pdfPath, int pageNumber, String searchText, int targetColumnIndex) throws IOException {
+        try (PDDocument document = Loader.loadPDF(new File(pdfPath))) {
+            DynamicTableStripper stripper = new DynamicTableStripper();
+            stripper.setStartPage(pageNumber);
+            stripper.setEndPage(pageNumber);
+            stripper.getText(document);
+
+            List<TextChunk> chunks = stripper.getChunks();
+            if (chunks.isEmpty()) return "No text found on page.";
+
+            float avgCharHeight = calculateAverageHeight(chunks);
+            float avgCharWidth = calculateAverageWidth(chunks);
+
+            // Fine-tuned thresholds based on font metrics
+            float dynamicRowTolerance = avgCharHeight * 0.4f; 
+            float dynamicWrapTolerance = avgCharHeight * 1.5f; // Fixed: Tightened to prevent merging separate rows
+            float dynamicColGap = avgCharWidth * 2.2f; 
+
+            List<TextLine> lines = buildVisualLines(chunks, dynamicRowTolerance);
+            List<LogicalRow> logicalRows = groupIntoLogicalRows(lines, dynamicWrapTolerance);
+
+            String cleanSearchKey = cleanText(searchText);
+
+            for (LogicalRow row : logicalRows) {
+                String cleanRowText = cleanText(row.getFullText());
+
+                if (cleanRowText.contains(cleanSearchKey)) {
+                    List<String> columns = row.extractColumns(dynamicColGap);
+
+                    int colIndex = targetColumnIndex - 1; // 1-based to 0-based
+                    if (colIndex >= 0 && colIndex < columns.size()) {
+                        return columns.get(colIndex);
+                    } else {
+                        return "Requested column " + targetColumnIndex + " out of bounds (Found " + columns.size() + " columns).";
+                    }
+                }
+            }
+        }
+        return "Search key not found.";
+    }
+
+    private static String cleanText(String str) {
+        if (str == null) return "";
+        return Pattern.compile("[^a-zA-Z0-9]").matcher(str).replaceAll("").toLowerCase();
+    }
+
+    private static float calculateAverageHeight(List<TextChunk> chunks) {
+        return (float) chunks.stream().mapToDouble(c -> c.height).average().orElse(12.0);
+    }
+
+    private static float calculateAverageWidth(List<TextChunk> chunks) {
+        return (float) chunks.stream().mapToDouble(c -> c.width).average().orElse(5.0);
+    }
+
+    private static List<TextLine> buildVisualLines(List<TextChunk> chunks, float rowTolerance) {
+        chunks.sort(Comparator.comparingDouble((TextChunk c) -> c.y).thenComparingDouble(c -> c.x));
+        List<TextLine> lines = new ArrayList<>();
+
+        for (TextChunk chunk : chunks) {
+            boolean added = false;
+            for (TextLine line : lines) {
+                if (Math.abs(line.y - chunk.y) <= rowTolerance) {
+                    line.addChunk(chunk);
+                    added = true;
+                    break;
+                }
+            }
+            if (!added) {
+                TextLine newLine = new TextLine(chunk.y);
+                newLine.addChunk(chunk);
+                lines.add(newLine);
+            }
+        }
+        lines.sort(Comparator.comparingDouble(l -> l.y));
+        return lines;
+    }
+
+    private static List<LogicalRow> groupIntoLogicalRows(List<TextLine> lines, float wrapTolerance) {
+        List<LogicalRow> logicalRows = new ArrayList<>();
+        if (lines.isEmpty()) return logicalRows;
+
+        LogicalRow currentLogicalRow = new LogicalRow();
+        currentLogicalRow.addLine(lines.get(0));
+
+        for (int i = 1; i < lines.size(); i++) {
+            TextLine prevLine = lines.get(i - 1);
+            TextLine currLine = lines.get(i);
+
+            if ((currLine.y - prevLine.y) <= wrapTolerance) {
+                currentLogicalRow.addLine(currLine);
+            } else {
+                logicalRows.add(currentLogicalRow);
+                currentLogicalRow = new LogicalRow();
+                currentLogicalRow.addLine(currLine);
+            }
+        }
+        logicalRows.add(currentLogicalRow);
+        return logicalRows;
+    }
+
+    private static class DynamicTableStripper extends PDFTextStripper {
+        private final List<TextChunk> chunks = new ArrayList<>();
+
+        public DynamicTableStripper() throws IOException { super(); }
+
+        @Override
+        protected void writeString(String text, List<TextPosition> textPositions) {
+            for (TextPosition pos : textPositions) {
+                if (!pos.getUnicode().trim().isEmpty()) {
+                    chunks.add(new TextChunk(
+                            pos.getUnicode(), pos.getXDirAdj(), pos.getYDirAdj(), 
+                            pos.getWidthDirAdj(), pos.getHeightDir()
+                    ));
+                }
+            }
+        }
+        public List<TextChunk> getChunks() { return chunks; }
+    }
+
+    private static class TextChunk {
+        String text; float x, y, width, height;
+        TextChunk(String text, float x, float y, float width, float height) {
+            this.text = text; this.x = x; this.y = y; this.width = width; this.height = height;
+        }
+    }
+
+    private static class TextLine {
+        float y;
+        List<TextChunk> chunks = new ArrayList<>();
+        TextLine(float y) { this.y = y; }
+        void addChunk(TextChunk chunk) { chunks.add(chunk); }
+    }
+
+    private static class LogicalRow {
+        List<TextLine> lines = new ArrayList<>();
+        void addLine(TextLine line) { lines.add(line); }
+
+        String getFullText() {
+            StringBuilder sb = new StringBuilder();
+            for (TextLine l : lines) {
+                for (TextChunk c : l.chunks) sb.append(c.text);
+            }
+            return sb.toString();
+        }
+
+        List<String> extractColumns(float gapThreshold) {
+            // Flatten all chunks in this row, sorting primarily by X coordinate
+            List<TextChunk> allChunks = lines.stream()
+                    .flatMap(l -> l.chunks.stream())
+                    .sorted(Comparator.comparingDouble((TextChunk c) -> c.x).thenComparingDouble(c -> c.y))
+                    .collect(Collectors.toList());
+
+            List<StringBuilder> columns = new ArrayList<>();
+            if (allChunks.isEmpty()) return Collections.emptyList();
+
+            StringBuilder currentCol = new StringBuilder();
+            TextChunk prevChunk = null;
+
+            for (TextChunk chunk : allChunks) {
+                if (prevChunk != null && (chunk.x - (prevChunk.x + prevChunk.width)) > gapThreshold) {
+                    columns.add(currentCol);
+                    currentCol = new StringBuilder();
+                } else if (prevChunk != null && (chunk.x - (prevChunk.x + prevChunk.width)) > chunk.width) {
+                    currentCol.append(" ");
+                }
+                currentCol.append(chunk.text);
+                prevChunk = chunk;
+            }
+            columns.add(currentCol);
+
+            return columns.stream()
+                    .map(sb -> sb.toString().trim())
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toList());
+        }
+    }
+}
