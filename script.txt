@@ -1,0 +1,236 @@
+# ==========================================
+# Configuration
+# ==========================================
+
+$NAMESPACE = "dev2-rpe-wfc"
+$DOWNLOADS = Join-Path $env:USERPROFILE "Downloads"
+$PDF_FILE = Join-Path $DOWNLOADS "IB_File_Output.pdf"
+$TEMP_HTML = Join-Path $env:TEMP "IB_File_Output.html"
+
+# ==========================================
+# Find Core Pod
+# ==========================================
+
+$PODS = kubectl get pods -n $NAMESPACE --no-headers -o custom-columns=":metadata.name"
+
+$POD_NAME = $PODS |
+    Where-Object { $_ -like "core-*" } |
+    Select-Object -First 1
+
+if ([string]::IsNullOrWhiteSpace($POD_NAME)) {
+    Write-Host "ERROR: No pod starting with 'core-' found in namespace $NAMESPACE"
+    exit 1
+}
+
+Write-Host "Core pod found: $POD_NAME"
+
+# ==========================================
+# Get today's file and CAT its contents
+# ==========================================
+
+Write-Host "Looking for today's IB file..."
+
+$REMOTE_SCRIPT = @'
+cd /sftp-mount/ids/inbound || exit 1
+
+CURRENT_DATE=$(date +%Y%m%d)
+
+FILE=$(find . -maxdepth 1 -type f \
+    \( -name "IB_Custom_${CURRENT_DATE}.csv" -o -name "IB_Standard_${CURRENT_DATE}.csv" \) \
+    -print -quit)
+
+if [ -z "$FILE" ]; then
+    echo "ERROR: No IB_Custom or IB_Standard file found for $CURRENT_DATE" >&2
+    exit 1
+fi
+
+FILE=${FILE#./}
+
+echo "__SELECTED_FILE__=$FILE" >&2
+
+cat "$FILE"
+'@
+
+# Execute inside pod WITHOUT -it so output can be captured
+$CAT_OUTPUT = kubectl exec $POD_NAME -n $NAMESPACE -- bash -c $REMOTE_SCRIPT 2> "$env:TEMP\ib_error.txt"
+
+# Check kubectl result
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: Failed to get the file from the pod."
+    
+    if (Test-Path "$env:TEMP\ib_error.txt") {
+        Get-Content "$env:TEMP\ib_error.txt" | Write-Host
+    }
+
+    exit 1
+}
+
+# ==========================================
+# Get selected filename
+# ==========================================
+
+$ERROR_OUTPUT = Get-Content "$env:TEMP\ib_error.txt" -ErrorAction SilentlyContinue
+
+$FILE_LINE = $ERROR_OUTPUT |
+    Where-Object { $_ -like "__SELECTED_FILE__=*" } |
+    Select-Object -First 1
+
+if ($FILE_LINE) {
+    $SELECTED_FILE = $FILE_LINE -replace "^__SELECTED_FILE__=", ""
+}
+else {
+    $SELECTED_FILE = "Unknown"
+}
+
+Write-Host "File selected: $SELECTED_FILE"
+Write-Host "File content retrieved successfully."
+
+# ==========================================
+# Prepare HTML content for PDF
+# ==========================================
+
+$CONTENT = $CAT_OUTPUT -join "rn"
+
+# Escape HTML special characters
+$CONTENT = $CONTENT.Replace("&", "&amp;")
+$CONTENT = $CONTENT.Replace("<", "&lt;")
+$CONTENT = $CONTENT.Replace(">", "&gt;")
+
+$HTML = @"
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+    body {
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 9pt;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .header {
+        font-family: Arial, sans-serif;
+        font-size: 14pt;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .info {
+        font-family: Arial, sans-serif;
+        font-size: 9pt;
+        margin-bottom: 15px;
+    }
+
+    .content {
+        white-space: pre-wrap;
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+    IB File Contents
+</div>
+
+<div class="info">
+    Pod: $POD_NAME<br>
+    File: $SELECTED_FILE<br>
+    Date: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+</div>
+
+<div class="content">$CONTENT</div>
+
+</body>
+</html>
+"@
+
+# Save temporary HTML
+Set-Content -Path $TEMP_HTML -Value $HTML -Encoding UTF8
+
+# ==========================================
+# Find Microsoft Edge
+# ==========================================
+
+$EDGE_PATHS = @(
+    "$env:ProgramFiles(x86)\Microsoft\Edge\Application\msedge.exe",
+    "$env:ProgramFiles\Microsoft\Edge\Application\msedge.exe",
+    "$env:LOCALAPPDATA\Microsoft\Edge\Application\msedge.exe"
+)
+
+$EDGE = $EDGE_PATHS |
+    Where-Object { Test-Path $_ } |
+    Select-Object -First 1
+
+if (-not $EDGE) {
+    Write-Host ""
+    Write-Host "ERROR: Microsoft Edge was not found."
+    Write-Host "The CSV data was successfully retrieved, but PDF creation requires Microsoft Edge."
+    Write-Host ""
+    Write-Host "File contents:"
+    Write-Host $CAT_OUTPUT
+    exit 1
+}
+
+# ==========================================
+# Create PDF in Downloads
+# ==========================================
+
+Write-Host "Creating PDF..."
+
+# Remove existing PDF so it is replaced
+if (Test-Path $PDF_FILE) {
+    Remove-Item $PDF_FILE -Force
+}
+
+$HTML_URI = (New-Object System.Uri($TEMP_HTML)).AbsoluteUri
+
+$EDGE_ARGUMENTS = @(
+    "--headless"
+    "--disable-gpu"
+    "--no-pdf-header-footer"
+    "--print-to-pdf="$PDF_FILE""
+    ""$HTML_URI""
+)
+
+$PROCESS = Start-Process `
+    -FilePath $EDGE `
+    -ArgumentList $EDGE_ARGUMENTS `
+    -Wait `
+    -PassThru `
+    -WindowStyle Hidden
+
+# ==========================================
+# Verify PDF
+# ==========================================
+
+if (Test-Path $PDF_FILE) {
+
+    Write-Host ""
+    Write-Host "========================================"
+    Write-Host "SUCCESS"
+    Write-Host "========================================"
+    Write-Host "Pod       : $POD_NAME"
+    Write-Host "File      : $SELECTED_FILE"
+    Write-Host "PDF       : $PDF_FILE"
+    Write-Host "========================================"
+    Write-Host ""
+}
+else {
+
+    Write-Host ""
+    Write-Host "ERROR: PDF could not be created."
+    Write-Host ""
+    Write-Host "File contents were:"
+    Write-Host $CAT_OUTPUT
+}
+
+# ==========================================
+# Cleanup
+# ==========================================
+
+Remove-Item "$env:TEMP\ib_error.txt" -Force -ErrorAction SilentlyContinue
+Remove-Item $TEMP_HTML -Force -ErrorAction SilentlyContinue
