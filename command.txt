@@ -1,0 +1,1 @@
+az aks command invoke --resource-group wfcdevv2rg3eu2 --name wfcdevv2rg3eu2 --command "kubectl exec -n dev2-rpe-wfc core-b-6f99c6cbc7-pjkc4 -- bash -c 'cd /sftp-mount/ids/inbound && cat IB_Custom_*.csv'"
