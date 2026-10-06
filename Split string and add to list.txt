@@ -1,0 +1,55 @@
+package default_package;
+
+import com.tyss.optimize.common.util.*;
+import com.tyss.optimize.nlp.util.*;
+import com.tyss.optimize.nlp.util.annotation.*;
+import java.util.*;
+
+public class SplitStringAndAddToList implements Nlp {
+
+    @InputParams({
+        @InputParam(name = "Input String", type = "java.lang.String"),
+        @InputParam(name = "Regex", type = "java.lang.String")
+    })
+
+    @ReturnType(name = "String List", type = "java.util.List")
+
+    public NlpResponseModel execute(NlpRequestModel nlpRequestModel) throws NlpException {
+
+        Map<String, Object> programElementsInput = nlpRequestModel.getAttributes();
+
+        String inputString = (String) programElementsInput.get("Input String");
+        String regex = (String) programElementsInput.get("Regex");
+
+        List<String> returnValue = new ArrayList<>();
+
+        NlpResponseModel nlpResponseModel = new NlpResponseModel();
+
+        try {
+            // Your program element business logic starts here ...
+
+            if (inputString != null && !inputString.isEmpty()) {
+
+                // Split the input using the provided regex
+                String[] splitValues = inputString.split(regex);
+
+                // Add each value to the list
+                for (String value : splitValues) {
+                    returnValue.add(value);
+                }
+            }
+
+            nlpResponseModel.setStatus(CommonConstants.pass);
+
+        } catch (Exception e) {
+
+            nlpResponseModel.setStatus(CommonConstants.fail);
+            nlpResponseModel.setMessage("Failed to split the string: " + e.getMessage());
+        }
+
+        // Your program element business logic ends here ...
+        nlpResponseModel.getAttributes().put("String List", returnValue);
+
+        return nlpResponseModel;
+    }
+}
