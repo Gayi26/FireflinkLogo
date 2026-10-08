@@ -1,0 +1,41 @@
+{
+  _id: 'NLP2271',
+  nlpType: 'NLP',
+  platform: 'Web',
+  packageName: 'com.tyss.optimize.nlp.pdf',
+  nlpName: 'ExtractValueFromPdfTableByKey',
+  searchName: 'PDF : Extract value from PDF table row by key and column',
+  displayName: 'PDF : Extract value from PDF File Path page Page Number for row containing Search Text at column Column Number',
+  toolTip: 'PDF : Finds the row containing Search Text on page Page Number of PDF File Path and returns the value at column Column Number',
+  description: 'The NLP is used to extract a cell value from a table in a PDF. It finds the row containing the given text on the given page and returns the value at the given column number (1-based)',
+  returnType: 'java.lang.String',
+  passMessage: 'Extracted value from column Column Number of the row containing Search Text on page Page Number',
+  failMessage: 'Failed to extract value from column Column Number of the row containing Search Text on page Page Number',
+  actualFailedResult: 'N/A',
+  stepInputs: [
+    {
+      name: 'PDF File Path',
+      infoText: 'Absolute path of the PDF file',
+      type: 'java.lang.String'
+    },
+    {
+      name: 'Page Number',
+      infoText: 'Page to read, starting from 1',
+      type: 'java.lang.Long'
+    },
+    {
+      name: 'Search Text',
+      infoText: 'Text (key) present in the row to be located. Spaces and special characters are ignored while matching',
+      type: 'java.lang.String'
+    },
+    {
+      name: 'Column Number',
+      infoText: 'Column to return, starting from 1',
+      type: 'java.lang.Long'
+    }
+  ],
+  nlpCategory: [
+    'PDF',
+    'FILE'
+  ]
+}
