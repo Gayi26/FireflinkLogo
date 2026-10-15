@@ -1,0 +1,151 @@
+{
+  "_id": "NLP2275",
+  "nlpType": "NLP",
+  "platform": "Web",
+  "packageName": "com.tyss.optimize.nlp.custom",
+  "nlpName": "ValidateFileTime",
+  "searchName": "FILE : Validate file modified time is within allowed minutes of reference time",
+  "displayName": "FILE : Validate File Modified Time is within Allowed Time Difference In Minutes minutes of Expected Reference Time",
+  "toolTip": "FILE : Checks whether File Modified Time is within Allowed Time Difference In Minutes minutes of Expected Reference Time and returns true or false",
+  "description": "The NLP is used to validate a file's modified time. It compares the file modified time with the expected reference time (both in HH:mm:ss format) and returns true if the difference is within the allowed minutes, otherwise false",
+  "returnType": "java.lang.Boolean",
+  "passMessage": "Validated File Modified Time against Expected Reference Time with allowed difference of Allowed Time Difference In Minutes minutes",
+  "failMessage": "Failed to validate File Modified Time against Expected Reference Time",
+  "actualFailedResult": "N/A",
+  "stepInputs": [
+    {
+      "name": "File Modified Time",
+      "infoText": "Modified time of the file in HH:mm:ss format, e.g. 10:32:00",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Expected Reference Time",
+      "infoText": "Reference time to compare with, in HH:mm:ss format, e.g. 10:30:00",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Allowed Time Difference In Minutes",
+      "infoText": "Maximum allowed difference in minutes (0 or greater)",
+      "type": "java.lang.Long"
+    }
+  ],
+  "nlpCategory": [
+    "FILE",
+    "TIME"
+  ]
+}
+{
+  "_id": "NLP2274",
+  "nlpType": "NLP",
+  "platform": "Web",
+  "packageName": "com.tyss.optimize.nlp.custom",
+  "nlpName": "SplitStringAndAddToList",
+  "searchName": "STRING : Split string using regex and add the values to a list",
+  "displayName": "STRING : Split Input String using regex Regex and add the values to a list",
+  "toolTip": "STRING : Splits Input String using the regex Regex and returns the resulting values as a list",
+  "description": "The NLP is used to split the given input string using the given regex (for example , or \\n) and return all the split values as a list of strings",
+  "returnType": "java.util.List",
+  "passMessage": "Split Input String using regex Regex and added the values to the list",
+  "failMessage": "Failed to split Input String using regex Regex",
+  "actualFailedResult": "N/A",
+  "stepInputs": [
+    {
+      "name": "Input String",
+      "infoText": "String to be split. A typed \\n inside the string is treated as a new line",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Regex",
+      "infoText": "Regex used to split the string, e.g. , or \\n or \\s+",
+      "type": "java.lang.String"
+    }
+  ],
+  "nlpCategory": [
+    "STRING",
+    "LIST"
+  ]
+}
+
+{
+  "_id": "NLP2276",
+  "nlpType": "NLP",
+  "platform": "Web",
+  "packageName": "com.tyss.optimize.nlp.custom",
+  "nlpName": "TriggerMailAlert",
+  "searchName": "EMAIL : Send mail alert to recipients using SMTP",
+  "displayName": "EMAIL : Send mail Subject to Recipients from Sender Email using SMTP SMTP Host port SMTP Port",
+  "toolTip": "EMAIL : Sends a mail with Subject and Mail Body from Sender Email to every address in Recipients through the SMTP server SMTP Host. Returns true when the mail is sent",
+  "description": "The NLP is used to send a mail alert, for example when a scenario fails. It logs in to the SMTP server with the sender email and password (use an App Password for Gmail), sends a separate mail with the given subject and body to each recipient, and returns true when all mails are sent. The step fails if any mail cannot be sent",
+  "returnType": "java.lang.Boolean",
+  "passMessage": "Mail Subject sent successfully to Recipients",
+  "failMessage": "Failed to send mail Subject to Recipients",
+  "actualFailedResult": "N/A",
+  "stepInputs": [
+    {
+      "name": "Sender Email",
+      "infoText": "Email address used to log in to the SMTP server and send the mail",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Sender Password",
+      "infoText": "Password of the sender. For Gmail or Google Workspace use the 16-character App Password",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Recipients",
+      "infoText": "One or more email addresses separated by comma, e.g. a@x.com,b@x.com",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Subject",
+      "infoText": "Subject line of the mail",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Mail Body",
+      "infoText": "Text of the mail. A typed \\n is treated as a new line",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "SMTP Host",
+      "infoText": "SMTP server address. Leave empty to use smtp.gmail.com",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "SMTP Port",
+      "infoText": "SMTP server port with STARTTLS. Leave empty to use 587",
+      "type": "java.lang.Long"
+    }
+  ],
+  "nlpCategory": [
+    "EMAIL",
+    "NOTIFICATION"
+  ]
+}
+{
+  "_id": "NLP2277",
+  "nlpType": "NLP",
+  "platform": "Web",
+  "packageName": "com.tyss.optimize.nlp.custom",
+  "nlpName": "RoundOffTheNumber",
+  "searchName": "NUMBER : Round off the number to the nearest whole number",
+  "displayName": "NUMBER : Round off *Number* to the nearest whole number",
+  "toolTip": "NUMBER : Rounds off *Number* (decimal, integer or numeric text) to the nearest whole number and returns it",
+  "description": "The NLP is used to round off a number to the nearest whole number. It accepts a decimal or whole number given as text or as a numeric variable, for example 123.45 gives 123 and 987.50 gives 988, and returns the result as a whole number",
+  "returnType": "java.lang.Long",
+  "passMessage": "Rounded off *Number* to the nearest whole number",
+  "failMessage": "Failed to round off *Number*",
+  "actualFailedResult": "N/A",
+  "stepInputs": [
+    {
+      "name": "Number",
+      "infoText": "Number to round off, e.g. 123.45 or -2.7. Commas and units are not allowed",
+      "type": "java.lang.String"
+    }
+  ],
+  "nlpCategory": [
+    "NUMBER",
+    "MATH"
+  ]
+}
+https://fireflink-secure-fs.s3.ap-south-1.amazonaws.com/zafin/tyss-execution-client-1.0-SNAPSHOT.jar
