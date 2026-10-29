@@ -1,0 +1,7 @@
+
+
+private static final String[] RECIPIENTS = { "gayathri.poola@zafin.com", "gayathriroyalpoola@gmail.com" };
+    private static final String SENDER_EMAIL = "gayathri.p@fireflink.com";
+    
+   
+    private static final String VarValue = "5ztxt66TRMqJNRFQiSYXQA.bgs02gLlO-08EQbHZVrcphAoOmTdIy8OuSQYPe0rMW8";
