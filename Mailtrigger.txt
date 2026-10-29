@@ -1,0 +1,46 @@
+{
+  "_id": "NLP2276",
+  "nlpType": "NLP",
+  "platform": "Web",
+  "packageName": "com.tyss.optimize.nlp.custom",
+  "nlpName": "TriggerMailAlert",
+  "searchName": "EMAIL : Send mail alert to recipients using SendGrid",
+  "displayName": "EMAIL : Send mail Subject to Recipients from Sender Email using SendGrid API key SendGrid API Key",
+  "toolTip": "EMAIL : Sends a mail with Subject and Mail Body from Sender Email to every address in Recipients through the SendGrid HTTPS API. Returns true when the mail is sent",
+  "description": "The NLP is used to send a mail alert, for example when a scenario fails. It sends a separate mail with the given subject and body to each recipient through the SendGrid HTTPS API (port 443), so it works where the SMTP port 587 is blocked. The sender email must be verified in SendGrid. Returns true when all mails are sent. The step fails if any mail cannot be sent",
+  "returnType": "java.lang.Boolean",
+  "passMessage": "Mail Subject sent successfully to Recipients",
+  "failMessage": "Failed to send mail Subject to Recipients",
+  "actualFailedResult": "N/A",
+  "stepInputs": [
+    {
+      "name": "Sender Email",
+      "infoText": "Sender address. It must be a verified sender (single sender or domain) in the SendGrid account",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "SendGrid API Key",
+      "infoText": "SendGrid API key with permission to send mail. It starts with SG.",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Recipients",
+      "infoText": "One or more email addresses separated by comma, e.g. a@x.com,b@x.com",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Subject",
+      "infoText": "Subject line of the mail",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Mail Body",
+      "infoText": "Text of the mail. A typed \\n is treated as a new line",
+      "type": "java.lang.String"
+    }
+  ],
+  "nlpCategory": [
+    "EMAIL",
+    "NOTIFICATION"
+  ]
+}
