@@ -1,0 +1,5 @@
+  private static final String[] RECIPIENTS = { "gayathri.poola@zafin.com", "gayathriroyalpoola@gmail.com" };
+    private static final String SENDER_EMAIL = "gayathri.p@fireflink.com";
+    
+    // Create a free SendGrid account and generate an API key to paste below
+    private static final String SENDGRID_VarValue = "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";
