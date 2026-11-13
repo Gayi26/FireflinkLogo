@@ -1,0 +1,302 @@
+
+#!/bin/bash
+
+# ==========================================
+# GENERIC OUTBOUND FILE MONITORING SCRIPT
+# ==========================================
+
+DIRECTORY="/sftp-mount/rpm/outbound/rpm"
+
+# Scheduled pipeline execution time
+SCHEDULED_TIME="2026-11-13 12:00:00"
+
+# Monitoring configuration
+BEFORE_MINUTES=5
+AFTER_MINUTES=5
+POLL_INTERVAL=30
+STABLE_CHECKS_REQUIRED=2
+
+# Expected files
+EXPECTED_FILES=(
+    "XSETS.TXT"
+    "REMARKS.TXT"
+    "P8494.TXT"
+    "P8395.TXT"
+    "P8390.TXT"
+    "CRPC.TXT"
+)
+
+# ==========================================
+# VALIDATE CONFIGURATION
+# ==========================================
+
+if [ ! -d "$DIRECTORY" ]; then
+    echo "FINAL_STATUS=ERROR"
+    echo "ERROR_MESSAGE=Directory does not exist"
+    exit 2
+fi
+
+if [ "${#EXPECTED_FILES[@]}" -eq 0 ] ||
+   [ "$BEFORE_MINUTES" -lt 0 ] ||
+   [ "$AFTER_MINUTES" -lt 0 ] ||
+   [ "$POLL_INTERVAL" -le 0 ] ||
+   [ "$STABLE_CHECKS_REQUIRED" -lt 1 ]; then
+
+    echo "FINAL_STATUS=ERROR"
+    echo "ERROR_MESSAGE=Invalid configuration"
+    exit 2
+fi
+
+# ==========================================
+# CALCULATE MONITORING WINDOW
+# ==========================================
+
+SCHEDULED_EPOCH=$(date -d "$SCHEDULED_TIME" +%s)
+
+if [ $? -ne 0 ]; then
+    echo "FINAL_STATUS=ERROR"
+    echo "ERROR_MESSAGE=Invalid scheduled time"
+    exit 2
+fi
+
+START_EPOCH=$((SCHEDULED_EPOCH - BEFORE_MINUTES * 60))
+END_EPOCH=$((SCHEDULED_EPOCH + AFTER_MINUTES * 60))
+
+echo "=========================================="
+echo "OUTBOUND FILE MONITORING"
+echo "=========================================="
+echo "Directory       : $DIRECTORY"
+echo "Scheduled Time  : $SCHEDULED_TIME"
+echo "Monitoring Start: $(date -d "@$START_EPOCH")"
+echo "Monitoring End  : $(date -d "@$END_EPOCH")"
+echo "Polling Interval: $POLL_INTERVAL seconds"
+echo "Expected Files  : ${#EXPECTED_FILES[@]}"
+echo "=========================================="
+
+# ==========================================
+# WAIT UNTIL MONITORING START
+# ==========================================
+
+echo "Waiting for monitoring window..."
+
+while [ "$(date +%s)" -lt "$START_EPOCH" ]; do
+    sleep 1
+done
+
+echo "MONITORING_STARTED=$(date '+%Y-%m-%d %H:%M:%S')"
+
+# ==========================================
+# CAPTURE INITIAL FILE STATE
+# ==========================================
+
+declare -A INITIAL_STATE
+
+for FILE in "${EXPECTED_FILES[@]}"; do
+
+    FILE_PATH="$DIRECTORY/$FILE"
+
+    if [ -f "$FILE_PATH" ]; then
+        INITIAL_STATE["$FILE"]="$(stat -c '%s:%Y:%i' "$FILE_PATH")"
+    else
+        INITIAL_STATE["$FILE"]="MISSING"
+    fi
+
+done
+
+PREVIOUS_SNAPSHOT=""
+STABLE_COUNT=0
+POLL_COUNT=0
+
+# ==========================================
+# POLLING LOOP
+# ==========================================
+
+while [ "$(date +%s)" -le "$END_EPOCH" ]; do
+
+    CURRENT_SNAPSHOT=""
+    ALL_READY=true
+
+    GENERATED_FILES=()
+    MISSING_FILES=()
+    UNCHANGED_FILES=()
+    INCOMPLETE_FILES=()
+
+    for FILE in "${EXPECTED_FILES[@]}"; do
+
+        FILE_PATH="$DIRECTORY/$FILE"
+
+        if [ -f "$FILE_PATH" ]; then
+
+            CURRENT_STATE=$(stat -c '%s:%Y:%i' "$FILE_PATH")
+            SIZE=$(stat -c '%s' "$FILE_PATH")
+
+            # Compare against initial state
+            if [ "${INITIAL_STATE[$FILE]}" != "$CURRENT_STATE" ]; then
+
+                GENERATED_FILES+=("$FILE")
+                CURRENT_SNAPSHOT+="$FILE:$CURRENT_STATE;"
+
+            else
+
+                UNCHANGED_FILES+=("$FILE")
+                ALL_READY=false
+
+            fi
+
+            if [ "$SIZE" -eq 0 ]; then
+                INCOMPLETE_FILES+=("$FILE")
+                ALL_READY=false
+            fi
+
+        else
+
+            MISSING_FILES+=("$FILE")
+            ALL_READY=false
+
+        fi
+
+    done
+
+    POLL_COUNT=$((POLL_COUNT + 1))
+
+    echo ""
+    echo "------------------------------------------"
+    echo "POLL NUMBER: $POLL_COUNT"
+    echo "CHECK TIME : $(date '+%H:%M:%S')"
+    echo "GENERATED  : ${GENERATED_FILES[*]:-None}"
+    echo "MISSING    : ${MISSING_FILES[*]:-None}"
+    echo "UNCHANGED  : ${UNCHANGED_FILES[*]:-None}"
+    echo "ZERO SIZE  : ${INCOMPLETE_FILES[*]:-None}"
+
+    # ======================================
+    # CHECK FILE STABILITY
+    # ======================================
+
+    if [ "$ALL_READY" = true ]; then
+
+        if [ "$CURRENT_SNAPSHOT" = "$PREVIOUS_SNAPSHOT" ]; then
+            STABLE_COUNT=$((STABLE_COUNT + 1))
+        else
+            STABLE_COUNT=1
+        fi
+
+        echo "STABLE CHECK: $STABLE_COUNT"
+
+        if [ "$STABLE_COUNT" -ge "$STABLE_CHECKS_REQUIRED" ]; then
+
+            echo ""
+            echo "=========================================="
+            echo "FINAL_STATUS=SUCCESS"
+            echo "EXPECTED_COUNT=${#EXPECTED_FILES[@]}"
+            echo "GENERATED_COUNT=${#EXPECTED_FILES[@]}"
+            echo "MISSING_COUNT=0"
+            echo "POLL_COUNT=$POLL_COUNT"
+            echo "All expected files generated and stable."
+            echo "=========================================="
+
+            exit 0
+        fi
+
+    else
+
+        STABLE_COUNT=0
+        echo "STATUS=IN_PROGRESS"
+
+    fi
+
+    PREVIOUS_SNAPSHOT="$CURRENT_SNAPSHOT"
+
+    # Avoid sleeping beyond the monitoring deadline
+    REMAINING=$((END_EPOCH - $(date +%s)))
+
+    if [ "$REMAINING" -le 0 ]; then
+        break
+    fi
+
+    SLEEP_TIME=$POLL_INTERVAL
+
+    if [ "$REMAINING" -lt "$POLL_INTERVAL" ]; then
+        SLEEP_TIME=$REMAINING
+    fi
+
+    sleep "$SLEEP_TIME"
+
+done
+
+# ==========================================
+# FINAL RESULT
+# ==========================================
+
+FINAL_GENERATED=()
+FINAL_MISSING=()
+FINAL_UNCHANGED=()
+FINAL_INCOMPLETE=()
+
+for FILE in "${EXPECTED_FILES[@]}"; do
+
+    FILE_PATH="$DIRECTORY/$FILE"
+
+    if [ ! -f "$FILE_PATH" ]; then
+
+        FINAL_MISSING+=("$FILE")
+
+    else
+
+        CURRENT_STATE=$(stat -c '%s:%Y:%i' "$FILE_PATH")
+        SIZE=$(stat -c '%s' "$FILE_PATH")
+
+        if [ "${INITIAL_STATE[$FILE]}" = "$CURRENT_STATE" ]; then
+            FINAL_UNCHANGED+=("$FILE")
+        else
+            FINAL_GENERATED+=("$FILE")
+        fi
+
+        if [ "$SIZE" -eq 0 ]; then
+            FINAL_INCOMPLETE+=("$FILE")
+        fi
+
+    fi
+
+done
+
+GENERATED_COUNT=${#FINAL_GENERATED[@]}
+MISSING_COUNT=${#FINAL_MISSING[@]}
+UNCHANGED_COUNT=${#FINAL_UNCHANGED[@]}
+INCOMPLETE_COUNT=${#FINAL_INCOMPLETE[@]}
+
+if [ "$GENERATED_COUNT" -eq 0 ]; then
+    FINAL_STATUS="FAILED"
+elif [ "$MISSING_COUNT" -gt 0 ] ||
+     [ "$UNCHANGED_COUNT" -gt 0 ] ||
+     [ "$INCOMPLETE_COUNT" -gt 0 ]; then
+    FINAL_STATUS="PARTIAL"
+else
+    FINAL_STATUS="SUCCESS"
+fi
+
+echo ""
+echo "=========================================="
+echo "FINAL MONITORING REPORT"
+echo "=========================================="
+
+echo "FINAL_STATUS=$FINAL_STATUS"
+echo "EXPECTED_COUNT=${#EXPECTED_FILES[@]}"
+echo "GENERATED_COUNT=$GENERATED_COUNT"
+echo "MISSING_COUNT=$MISSING_COUNT"
+echo "UNCHANGED_COUNT=$UNCHANGED_COUNT"
+echo "INCOMPLETE_COUNT=$INCOMPLETE_COUNT"
+echo "POLL_COUNT=$POLL_COUNT"
+
+echo ""
+echo "GENERATED_FILES=${FINAL_GENERATED[*]:-None}"
+echo "MISSING_FILES=${FINAL_MISSING[*]:-None}"
+echo "UNCHANGED_FILES=${FINAL_UNCHANGED[*]:-None}"
+echo "INCOMPLETE_FILES=${FINAL_INCOMPLETE[*]:-None}"
+
+echo "=========================================="
+
+if [ "$FINAL_STATUS" = "SUCCESS" ]; then
+    exit 0
+else
+    exit 1
+fi
