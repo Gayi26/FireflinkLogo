@@ -1,0 +1,12 @@
+kubectl cp -n zcs-rpk "C:\Users\GayathriPoola\Downloads\PollTheData.bash" "rpk-connect-node-56c7fc8f9-4ck28:/tmp/PollTheData.bash" -c redpanda-connect-node
+
+kubectl exec -it rpk-connect-node-56c7fc8f9-4ck28 -n zcs-rpk -c redpanda-connect-node -- ls -l /tmp/PollTheData.bash
+
+-rw-r--r-- 1 root root ... /tmp/PollTheData.bash
+
+kubectl exec -it rpk-connect-node-56c7fc8f9-4ck28 -n zcs-rpk -c redpanda-connect-node -- sh
+
+cd /tmp
+sed -i 's/\r$//' PollTheData.bash
+chmod +x PollTheData.bash
+./PollTheData.bash
