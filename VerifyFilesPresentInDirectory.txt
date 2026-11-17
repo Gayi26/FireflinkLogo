@@ -1,0 +1,64 @@
+{
+  "_id": "NLP2312",
+  "nlpType": "NLP",
+  "platform": "Web",
+  "packageName": "com.tyss.optimize.nlp.custom",
+  "nlpName": "VerifyFilesPresentInDirectory",
+  "searchName": "FILE : Verify files are present in the directory within pre and post minutes of the date and time by polling",
+  "displayName": "FILE : Verify File Names are present in Directory Path using Command from Pre Time In Minutes minutes before to Post Time In Minutes minutes after Date Time, polling every Polling Interval In Seconds seconds, and log the result in Folder Path",
+  "toolTip": "FILE : Runs Command on Directory Path every Polling Interval In Seconds seconds and checks that all File Names are present with a modified time from Pre Time In Minutes minutes before to Post Time In Minutes minutes after Date Time. Adds a timestamped result to the daily log file NLP_dd-MM-yyyy.log in Folder Path and returns the log file path",
+  "description": "The NLP is used to verify that one or more files are present in a directory with a modified time from the given pre minutes before to the given post minutes after the date and time. It runs the given listing command (for example ls -lrth, through kubectl exec for a pod) in PowerShell on Windows or sh on Linux, adding the directory path at the end of the command or in place of {PATH}. If not all files are found, it runs the command again every polling interval until all files are found or until the end of the last accepted minute (date time + post minutes + 1 minute). For example, Date Time Jul 30 10:00 with Pre 5 and Post 5 accepts files dated Jul 30 09:55 to 10:05 and polls until 10:06. Every run adds a timestamped entry, listing which files are present, not present or outside the time window, to a daily log file named NLP_dd-MM-yyyy.log (for example NLP_17-11-2026.log) in the given folder (test data or local path). Runs on the same day in the same folder add to the same file; a new day or a new folder starts a new log file. It returns the log file path. If not all files are found, the entry with the exception is written to the log and the step fails with the names of the files that were not found",
+  "returnType": "java.lang.String",
+  "passMessage": "All File Names are present in Directory Path from Pre Time In Minutes minutes before to Post Time In Minutes minutes after Date Time, and the result is logged in Folder Path",
+  "failMessage": "Failed to find all File Names in Directory Path from Pre Time In Minutes minutes before to Post Time In Minutes minutes after Date Time. Check the log in Folder Path",
+  "actualFailedResult": "N/A",
+  "stepInputs": [
+    {
+      "name": "Directory Path",
+      "infoText": "Directory to check, e.g. /sftp-mount/rpm/outbound/rpm. It is added at the end of the command, or in place of {PATH} if the command contains it",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Command",
+      "infoText": "Command that lists the directory in ls -l format, e.g. kubectl exec <pod-name> -n <namespace> -- ls -lrth. Do not use -it with kubectl exec",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "File Names",
+      "infoText": "One file name, or several separated by commas, with extension, e.g. REMARKS.TXT,P8395.TXT. Names are case-sensitive",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Date Time",
+      "infoText": "Expected modified date and time of the files, e.g. Jul 30 10:00 (current year) or Jul 30 2026 10:00. Use the time zone of the machine the files are on",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Pre Time In Minutes",
+      "infoText": "How many minutes before Date Time a file is still accepted, e.g. 5. Use 0 to accept nothing earlier than Date Time",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Post Time In Minutes",
+      "infoText": "How many minutes after Date Time a file is still accepted, e.g. 5. Polling stops 1 minute after this (with 0, Jul 30 10:00 polls until 10:01)",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Polling Interval In Seconds",
+      "infoText": "How often to run the command again while files are missing, e.g. 10",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "Folder Path",
+      "fileOrigin": "all",
+      "checkboxValue": false,
+      "parameter": false,
+      "infoText": "Test data folder or local folder for the daily log file NLP_dd-MM-yyyy.log, e.g. NLP_17-11-2026.log. Each run on the same day adds a timestamped entry to that day's file; the next day, or a different folder, starts a new log file",
+      "type": "java.lang.String"
+    }
+  ],
+  "nlpCategory": [
+    "FILE",
+    "COMMAND"
+  ]
+}
