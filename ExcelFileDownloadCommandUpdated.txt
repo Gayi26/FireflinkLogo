@@ -1,0 +1,1 @@
+for /f "delims=" %F in ('kubectl exec -n zcs-rpk -c redpanda-connect-node rpk-connect-node-74bfd8fd47-2ztfq -- sh -c "ls -1t /sftp-mount/backdated/outbound/BACKDATED_DETAILS_20261118_*.xlsx 2>/dev/null ^| head -n 1 ^| xargs -r basename"') do kubectl cp -n zcs-rpk -c redpanda-connect-node rpk-connect-node-74bfd8fd47-2ztfq:/sftp-mount/backdated/outbound/%F .
