@@ -1,0 +1,37 @@
+{
+  "_id": "NLP_2313",
+  "searchName": "Excel : Get complete row data including empty cells for specified Row Index",
+  "nlpName": "GetCompleteRowDataWithEmptyCellsUsingRowIndex",
+  "nlpType": "NLP",
+  "packageName": "com.tyss.optimize.nlp.web.custom",
+  "displayName": "Excel : Get complete row data including empty cells of row rowIndex",
+  "toolTip": "Excel : Get complete row data including empty cells of row rowIndex from file filePath",
+  "description": "This NLP is used to fetch complete row data based on given row index. Empty cells are returned as empty values so the column positions are preserved",
+  "platform": "Common",
+  "passMessage": "Complete row data of row rowIndex is returnValue",
+  "failMessage": "Failed to fetch complete row data of row rowIndex",
+  "actualFailedResult": "N/A",
+  "stepInputs": [
+    {
+      "name": "filePath",
+      "type": "com.tyss.optimize.nlp.util.xls",
+      "fileOrigin": "all",
+      "parameter": false
+    },
+    {
+      "name": "sheetName",
+      "type": "java.lang.String",
+      "parameter": false
+    },
+    {
+      "name": "rowIndex",
+      "type": "java.lang.Integer",
+      "parameter": false
+    }
+  ],
+  "returnType": "String[]: returnValue",
+  "_class": "com.tyss.optimize.data.models.db.model.Nlp",
+  "nlpCategory": [
+    "EXCEL"
+  ]
+}
